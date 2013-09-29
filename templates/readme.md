@@ -1,4 +1,4 @@
-with the exception of provision.json, valid options for the 'os_install_file'
+with the exception of provision.json, valid options for the 'os_template'
 and 'boot_sequence' properties of a provision go in here. 
 
 use a '.ipxe' extension for boot files
