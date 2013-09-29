@@ -18,22 +18,22 @@ function getProvision(uuid) {
 }
 
 function createProvision(provision) {
-  
   $.ajax({
     type: 'POST',
     url: '/provisions/',
     contentType: 'application/json',
-    data: provision
-  })
-  .done(function(data) {
-    $('status').innerHTML = data;
+    data: provision,
+  }).success(function(data) {
+    $('#status').text('server says: ' + data);
+  }).fail(function() {
+    $('#status').text('something went horribly wrong!');
   });
 }
 
 
 function getTemplates() {
 
-  $('form').reset();
+  $('form')[0].reset();
 
   $.getJSON('templates', function(data) {
     var os_html = '<option value=""></option>'
@@ -56,18 +56,18 @@ function getTemplates() {
 }
 
 function doEet() {
-  var fqdn = $('fqdn').value.toLowerCase()
-    , os_template = $('os_template').value
+  var fqdn = document.getElementById('fqdn').value.toLowerCase()
+    , os_template = document.getElementById('os_template').value
     , boot_sequence = {}
     , re = new RegExp('^([0-9a-f]){8}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){12}$')
-    , uuid = re.exec($('uuid').value.toLowerCase())
+    , uuid = re.exec(document.getElementById('uuid').value.toLowerCase())
     , host_uuid = uuid[0];
 
   if (!host_uuid) {
-    $('status').innerHTML = 'Enter a valid UUID (including dashes)!';
+    document.getElementById('status').innerHTML = 'Enter a valid UUID (including dashes)!';
   } else {
 
-    if ($('fix_uuid').checked) {
+    if (document.getElementById('fix_uuid').checked) {
       host_uuid = fixUUID(host_uuid);
     }
 

@@ -41,8 +41,6 @@ def provisions():
 
         customise_os_template(host_uuid, fqdn, os_template)
 
-        ''' provision created, return provision.json to caller
-        '''
         return 'provision created successfully'
 
     else:
