@@ -1,0 +1,24 @@
+{
+  "id": "",
+  "boot_sequence" : { },
+  "created": "",
+  "current_step": "",
+  "finished": "",
+  "host": {
+    "name": "",
+    "suffix": "",
+    "uuid": ""
+  },
+  "network": {
+    "gateway": "",
+    "ip": "",
+    "netmask": ""
+  },        
+  "os_template": "",
+  "regional_settings": {
+    "dns_servers": "",
+    "ntp_servers": "",
+    "system_locale": ""
+  },
+  "started": ""
+}

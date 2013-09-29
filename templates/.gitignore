@@ -1,0 +1,5 @@
+*.ipxe
+*.ks
+*.preseed
+*.cfg
+*.xml

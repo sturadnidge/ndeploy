@@ -1,0 +1,30 @@
+#version=Fedora18
+install
+url --url http://build.fqdn/repo/fedora/18/x86_64
+lang en_US.UTF-8
+keyboard us
+network --device=eth0 --bootproto=dhcp --onboot=yes --noipv6
+#network --device=eth0 --bootproto=static --hostname=hostname --ip=x.x.x.x --netmask=x.x.x.x --gateway=x.x.x.x --nameserver=1.1.1.1,2.2.2.2 --on
+boot=yes --noipv6
+rootpw password
+firewall --disabled
+authconfig --enableshadow --passalgo=sha512 --enablefingerprint
+selinux --disabled
+timezone --utc Europe/London
+bootloader --location=mbr --driveorder=sda --append="crashkernel=auto rhgb quiet"
+ignoredisk --only-use=sda
+zerombr
+clearpart --drives=sda --all --initlabel
+part /boot --fstype=ext4 --size=500
+part pv.00 --grow --size=1
+volgroup vg_root --pesize=4096 pv.00
+logvol / --fstype=ext4 --name=lv_root --vgname=vg_root --grow --size=1
+logvol /home --fstype=ext4 --name=lv_home --vgname=vg_root --size=500
+logvol /var --fstype=ext4 --name=lv_var --vgname=vg_root --size=1000
+logvol /usr/local --fstype=ext4 --name=lv_usr_local --vgname=vg_root --size=500
+logvol swap --name=swap --vgname=vg_root --size=1000
+repo --name="Fedora 18"  --baseurl=http://build.fqdn/repo/fedora/18/x86_64 --cost=100
+reboot
+%packages --nobase
+@Core
+%end

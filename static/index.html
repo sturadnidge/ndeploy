@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>nDeploy</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="ndeploy.js"></script>
+    <link rel="stylesheet" type="text/css" href="ndeploy.css">
+  </head>
+  <body onload="getTemplates();">
+    <div id="container">
+      <div id="header">
+        <h1>nDeploy</h1>
+      </div>
+      <div id="content">
+        <p>
+          <br />
+          To create a new provision, complete all fields.
+          <br />
+          <br />
+          To lookup an existing provision, enter only the UUID.
+        </p>
+        <form name="a_form">
+          <p>
+            <div style='float: right;'>
+              <input class="check_box" type="checkbox" id="fix_uuid" name="fix_uuid"> Fix broken HP iLO UUID</input>
+            </div>
+            <label for="uuid">Enter a UUID</label>
+            <input type="text" id="uuid" name="uuid" maxlength="36"/>
+            <label for="fqdn">Enter a FQDN</label>
+            <input type="text" id="fqdn" name="fqdn" maxlength="36"/>
+            <label for="os_template">Choose an OS Template</label>
+            <select id="os_template" name="os_template"/>
+            </select>
+            <label for="boot_sequence">Build Sequence (first to last)</label>
+            <select id="boot_sequence_0" class="boot_sequence" name="boot_sequence_0"/>
+            </select>
+            <select id="boot_sequence_1" class="boot_sequence" name="boot_sequence_1"/>
+            </select>
+            <select id="boot_sequence_2" class="boot_sequence" name="boot_sequence_2"/>
+            </select>
+            <br />
+            <div style='text-align: right;'><input class="submit_button" type="button" id="submit" value="submit" onClick="doEet();"/></div>
+          </p>
+          <div id="status" class="info"></div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,134 @@
+
+
+/*--- Reset ---*/
+* { margin: 0; padding: 0; }
+
+html { height: 100%; width: 100%; background-color: #FFF; }
+
+/*--- Layout ---*/
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5em;
+  color: #0d0d0d;
+  background-color: #fff;
+  text-align:center;
+  margin: 0px;
+  padding: 0px;
+}
+
+#container {
+  position: relative;
+  margin: 0px auto;
+  padding: 50px;
+  width: 500px;
+  text-align: left;
+}
+
+/*--- Basics ---*/
+h1, h2, h3, h4, h5, h6 {
+  font-weight:bold;
+  color:#026BC6;
+  line-height: 1;
+  margin: 1.5em 0 0.5em 0;
+}
+h1 { font-size: 1.6em; }
+h2, h5 { font-size: 1.3em; color: #666; }
+h3, h6 { font-size: 1.2em; color: #00a8e6; }
+h4 { font-size: 1.1em; }
+h5 { font-size: 1.1em; }
+h6 { font-size: 1em; }
+p { margin-bottom: 1em; }
+strong { font-weight: bold; }
+em { font-style: italic; }
+a { text-decoration: none; color: #333; }
+a, h1 a, h2 a { text-decoration: none; }
+a:hover { color: #4343A3;  }
+a:visited:hover { color: #232323; }
+a img { border: none; }
+
+
+/*--- Header ---*/
+#header h1 {
+  margin: .1em 0;
+  font-size: 2.2em;
+}
+#header h2 {
+  width: 70%;
+  margin: .5em .5em 2em 0;
+  color: #666;
+  font-size: 1.3em;
+  line-height: 22px;
+}
+
+/*--- Forms ---*/
+form {
+  display: block;
+  clear: both;
+  background: #ededed;
+  padding: 1em 2em 2em 2em;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+}
+label {
+  padding: 0 1em 0 0;
+  color: #454545;
+  font-weight: normal;
+}
+input[type=text],[type=password], select, textarea {
+  font-family: Helvetica, Arial, sans-serif;
+  padding: 2px 4px;
+  border: 1px solid #CCC;
+  color: #454545;
+  font-size: 1em;
+  line-height: 1.25em;
+}
+input[type=text], input[type=password], select, textarea {
+  clear: both;
+  display: block;
+  padding: .25em .5em;
+}
+input[type=text], input[type=password], select, textarea {
+  width: 427px;
+  margin: .5em 0 1em 0;
+  padding:.5em;
+}
+select {
+  width: 442px;
+  margin: .5em 0 1em 0;
+  padding:.5em;
+}
+input[type=text]:focus, input[type=password]:focus, select:focus, textarea:focus {
+  border-color: #00a8e6;
+  outline: none;
+}
+.submit_button {
+  background-color: #026BC6;
+  border:1px solid #4343A3;
+  display:inline-block;
+  color:#f1f1f1;
+  font-family:Verdana;
+  font-size:13px;
+  font-weight:normal;
+  padding:6px 24px;
+  text-decoration:none;
+  text-align: right;
+}
+.submit_button:hover {
+  background-color: #608CED;
+  cursor: pointer;
+}
+.submit_button:active {
+  position:relative;
+  color: #4343A3;
+  background-color: #f1f1f1;
+  top:1px;
+}
+.info {
+  padding: 10px;
+  color: #363636;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /*border: 2px solid #ccc;*/
+  text-align: center;
+}
