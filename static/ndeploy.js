@@ -26,12 +26,15 @@ function createProvision(provision) {
     data: provision
   })
   .done(function(data) {
-    document.getElementById('status').innerHTML = data;
+    $('status').innerHTML = data;
   });
 }
 
 
 function getTemplates() {
+
+  $('form').reset();
+
   $.getJSON('templates', function(data) {
     var os_html = '<option value=""></option>'
       , boot_html = '<option value=""></option>'
@@ -53,18 +56,18 @@ function getTemplates() {
 }
 
 function doEet() {
-  var fqdn = document.getElementById('fqdn').value.toLowerCase()
-    , os_template = document.getElementById('os_template').value
+  var fqdn = $('fqdn').value.toLowerCase()
+    , os_template = $('os_template').value
     , boot_sequence = {}
     , re = new RegExp('^([0-9a-f]){8}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){12}$')
-    , uuid = re.exec(document.getElementById('uuid').value.toLowerCase())
+    , uuid = re.exec($('uuid').value.toLowerCase())
     , host_uuid = uuid[0];
 
   if (!host_uuid) {
-    document.getElementById('status').innerHTML = 'Enter a valid UUID (including dashes)!';
+    $('status').innerHTML = 'Enter a valid UUID (including dashes)!';
   } else {
 
-    if (document.getElementById('fix_uuid').checked) {
+    if ($('fix_uuid').checked) {
       host_uuid = fixUUID(host_uuid);
     }
 

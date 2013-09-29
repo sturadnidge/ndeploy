@@ -3,9 +3,8 @@ install
 url --url http://build.fqdn/repo/fedora/18/x86_64
 lang en_US.UTF-8
 keyboard us
-network --device=eth0 --bootproto=dhcp --onboot=yes --noipv6
-#network --device=eth0 --bootproto=static --hostname=hostname --ip=x.x.x.x --netmask=x.x.x.x --gateway=x.x.x.x --nameserver=1.1.1.1,2.2.2.2 --on
-boot=yes --noipv6
+network --device=eth0 --bootproto=dhcp --onboot=yes --noipv6 \
+--hostname={{hostname}}
 rootpw password
 firewall --disabled
 authconfig --enableshadow --passalgo=sha512 --enablefingerprint

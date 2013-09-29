@@ -94,7 +94,7 @@ def get_file(host_uuid, file_name):
 
                 current_step = provision['current_step']
 
-                if int(current_step) == 1):
+                if int(current_step) == 1:
                     provision['started'] = int(time.time() * 1000)
 
                 if int(current_step) < len(provision['boot_sequence']):
