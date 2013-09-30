@@ -20,6 +20,20 @@ def index():
 
 ''' provision routes
 '''
+@app.route('/unprovisioned/')
+def unprovisioned():
+    ''' if iPXE phones home but no provision is found
+        a uuid file will be created in here
+
+        create_provision checks this directory and deletes
+        any matching uuids it finds
+
+        a GET request will return a directory listing
+    '''
+    results = [ f for f in os.listdir('unprovisioned') if uuid_re.match(f) and os.path.isfile(os.path.join('unprovisioned', f)) ]
+
+    return jsonify(unprovisioned = results)
+
 
 @app.route('/provisions/', methods=['GET', 'POST'])
 def provisions():
@@ -46,15 +60,8 @@ def provisions():
     else:
         ''' a GET will return a directory listing
         '''
-        results = []
-        for root,dirs,files in os.walk('provisions'):
-            for dir in dirs:
-                ''' canes perf, but filtering out random directories
-                    is useful for now...
-                '''
-                if uuid_re.match(dir):
-                    results.append(dir)
-
+        results = [ d for d in os.listdir('provisions') if uuid_re.match(d) and os.path.isdir(os.path.join('provisions', d)) ]
+        
         return jsonify(provisions = results)
 
 @app.route('/provisions/<host_uuid>')
@@ -73,71 +80,88 @@ def get_file(host_uuid, file_name):
     provision_dir = os.path.join('provisions', host_uuid)
     provision_file = os.path.join(provision_dir, 'provision.json')
 
-    if not os.path.exists(provision_file):
-        abort(404)
+    if os.path.exists(provision_file):
 
-    if request.method == 'POST':
-        if file_name == 'reprovision':
-            with open(provision_file) as f:
-                provision = json.loads(f.read())
-
-            provision['current_step'] = 1
-            provision['created'] = int(time.time() * 1000)
-            provision['started'] = ""
-            provision['finished'] = ""
-
-            create_symlink(provision_dir, provision['boot_sequence']['1'], 'boot')
-
-            provision_content = json.dumps(provision, indent=2)
-
-            with open(provision_file, 'w+') as f:
-                f.write(provision_content)
-
-            return 'reprovision successful'
-
-        else:
-            abort(404)
-
-    else:
-        if file_name == 'boot':
-            ''' get current boot file content immediately
-                because we may change it shortly
-            '''
-            with open(os.path.join(provision_dir, file_name)) as f:
-                current_bootfile = f.read()
-
-            ''' if it's iPXE, update current_step in provision file
-                and point boot symlink at next file in boot_sequence
-            '''
-            if 'iPXE' in request.user_agent.string:
+        if request.method == 'POST':
+            if file_name == 'reprovision':
                 with open(provision_file) as f:
                     provision = json.loads(f.read())
 
-                current_step = provision['current_step']
+                provision['current_step'] = 1
+                provision['created'] = int(time.time() * 1000)
+                provision['started'] = ""
+                provision['finished'] = ""
 
-                if int(current_step) == 1:
-                    provision['started'] = int(time.time() * 1000)
-
-                if int(current_step) < len(provision['boot_sequence']):
-                    current_step += 1
-                    create_symlink(provision_dir, provision['boot_sequence'][str(current_step)], 'boot')
-                    provision['current_step'] = current_step
-                else:
-                    provision['finished'] = int(time.time() * 1000)
+                create_symlink(provision_dir, provision['boot_sequence']['1'], 'boot')
 
                 provision_content = json.dumps(provision, indent=2)
 
                 with open(provision_file, 'w+') as f:
                     f.write(provision_content)
 
-            return Response(current_bootfile, mimetype='text/plain')
+                return 'reprovision successful'
+
+            else:
+                abort(404)
 
         else:
-            ''' it's not a boot file request so just return requested file as text/plain
-            '''
-            with open(os.path.join(provision_dir, file_name)) as f:
-                data = f.read()
+            if file_name == 'boot':
+                ''' get current boot file content immediately
+                    because we may change it shortly
+                '''
+                with open(os.path.join(provision_dir, file_name)) as f:
+                    current_bootfile = f.read()
+
+                ''' if it's iPXE, update current_step in provision file
+                    and point boot symlink at next file in boot_sequence
+                '''
+                if 'iPXE' in request.user_agent.string:
+
+                    with open(provision_file) as f:
+                        provision = json.loads(f.read())
+
+                    current_step = provision['current_step']
+
+                    if int(current_step) == 1:
+                        provision['started'] = int(time.time() * 1000)
+
+                    if int(current_step) < len(provision['boot_sequence']):
+                        current_step += 1
+                        create_symlink(provision_dir, provision['boot_sequence'][str(current_step)], 'boot')
+                        provision['current_step'] = current_step
+                    else:
+                        provision['finished'] = int(time.time() * 1000)
+
+                    provision_content = json.dumps(provision, indent=2)
+
+                    with open(provision_file, 'w+') as f:
+                        f.write(provision_content)
+
+                return Response(current_bootfile, mimetype='text/plain')
+
+            else:
+                ''' it's not a boot file request so just return requested file as text/plain
+                '''
+                with open(os.path.join(provision_dir, file_name)) as f:
+                    data = f.read()
+                    
                 return Response(data, mimetype='text/plain')
+    else:
+        ''' there no provision file, so either it's
+            and unknown host or something messing around
+        '''
+        if not os.path.exists(provision_dir):
+            if 'iPXE' in request.user_agent.string:
+                ''' never free, never me
+                '''
+                with open(os.path.join('unprovisioned', host_uuid), 'w') as f:
+                    f.write()
+
+                return 'so i dub thee unprovisioned\n'
+
+            else:
+                abort(404)
+
 
 
 ''' template routes
@@ -146,6 +170,8 @@ def get_file(host_uuid, file_name):
 @app.route('/templates')
 def get_templates():
     ''' split out ipxe and os templates
+        using a list comprehension here
+        would be taking the piss
     '''
     os_t = []
     boot_t = []
@@ -161,13 +187,14 @@ def get_templates():
 
 ''' helper functions
 '''
-
 def create_provision(host_uuid, fqdn, os_file, sequence):
     ''' this calls most of the other helper functions
     '''
     provision_created = int(time.time() * 1000)
     provision_dir = os.path.join('provisions', host_uuid)
     provision_file = os.path.join(provision_dir, 'provision.json')
+
+    check_unprovisioned(host_uuid)
 
     create_dir(provision_dir)
 
@@ -176,12 +203,21 @@ def create_provision(host_uuid, fqdn, os_file, sequence):
     with open(provision_file) as f:
         data = json.loads(f.read())
 
-        copy_provision_files(provision_dir, data['os_template'], data['boot_sequence'])
+    copy_provision_files(provision_dir, data['os_template'], data['boot_sequence'])
 
-        create_symlink(provision_dir, data['os_template'], 'ks.cfg')
+    create_symlink(provision_dir, data['os_template'], 'ks.cfg')
 
-        create_symlink(provision_dir, data['boot_sequence']['1'], 'boot')
+    create_symlink(provision_dir, data['boot_sequence']['1'], 'boot')
 
+
+def check_unprovisioned(host_uuid):
+    unprovisioned_uuid = os.path.join('unprovisioned', host_uuid)
+    
+    if os.path.exists(unprovisioned_uuid):
+        try:
+            os.unlink(unprovisioned_uuid)
+        except OSError:
+            raise
 
 def copy_provision_files(provision_dir, os_template, boot_sequence):
     ''' provision_dir and os_template come in as strings, boot_sequence
@@ -296,4 +332,4 @@ def get_regional_settings(ip_address):
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', debug=False)
+    app.run('0.0.0.0', debug=True)
