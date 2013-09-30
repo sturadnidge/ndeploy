@@ -52,17 +52,29 @@ curl -i -H "Content-Type: application/json" -X POST -d \
 "uuid":"b9ae67b8-25e7-4633-b46a-8702c4bf1d34",
 "fqdn":"ndeploy-test.local",
 "os_template":"centos_6.4.ks",
-"boot_sequence":{"1":"firmware_1.ipxe","2":"firmware_2.ipxe","3":"centos_6.4.ipxe","4":"local.ipxe",}
+"boot_sequence":{"1":"firmware_1.ipxe","2":"firmware_2.ipxe","3":"centos_6.4.ipxe","4":"local.ipxe"}
 }' \
 http://[ndeploy.fqdn]/provisions/
 ```
 
-- to quickly reprovision something `curl -X POST http://[ndeploy.fqdn]/provisions/[uuid]/reprovision`
+URLs
+---
+*/* - the web UI
 
+*/provisions/* - list of uuids for which provisions have been created
+
+*/provisions/<uuid>* - individual provision.json
+
+*/provisions/<uuid>/reprovision* - to quickly restore a provision to its original state `curl -X POST http://[ndeploy.fqdn]/provisions/[uuid]/reprovision`
+
+*/templates/* - list of valid templates for use in the os_template and boot_sequence fields of a provision
+
+*/unprovisioned/* - list of uuids for which ipxe phoned home but no provision was found
 
 todo
 ----
 
+- harden up (more defensive code, real error handling)
 - build a network and regional settings information service
 - finish off get_network_details and get_regional_settings
 - ~~node.js~~ gevent rewrite
