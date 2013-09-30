@@ -44,7 +44,8 @@ curl -i -H "Content-Type: application/json" \
 "uuid":"b9ae67b8-25e7-4633-b46a-8702c4bf1d34",
 "fqdn":"ndeploy-test.local",
 "os_template":"centos_6.4.ks",
-"boot_sequence":{"1":"firmware_1.ipxe","2":"firmware_2.ipxe","3":"centos_6.4.ipxe","4":"local.ipxe",}}' \
+"boot_sequence":{"1":"firmware_1.ipxe","2":"firmware_2.ipxe","3":"centos_6.4.ipxe","4":"local.ipxe",}
+}' \
 http://localhost:5000/provisions/
 ```
 
