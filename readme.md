@@ -59,17 +59,17 @@ http://[ndeploy.fqdn]/provisions/
 
 URLs
 ---
-*/* - the web UI
+**/** - the web UI
 
-*/provisions/* - list of uuids for which provisions have been created
+**/provisions/** - list of uuids for which provisions have been created
 
-*/provisions/<uuid>* - individual provision.json
+**/provisions/{uuid}** - individual provision.json
 
-*/provisions/<uuid>/reprovision* - to quickly restore a provision to its original state `curl -X POST http://[ndeploy.fqdn]/provisions/[uuid]/reprovision`
+**/provisions/{uuid}/reprovision** - to quickly restore a provision to its original state `curl -X POST http://{ndeploy.fqdn}/provisions/{uuid}/reprovision`
 
-*/templates/* - list of valid templates for use in the os_template and boot_sequence fields of a provision
+**/templates/** - list of valid templates for use in the os_template and boot_sequence fields of a provision
 
-*/unprovisioned/* - list of uuids for which ipxe phoned home but no provision was found
+**/unprovisioned/** - list of uuids for which ipxe phoned home but no provision was found
 
 todo
 ----
