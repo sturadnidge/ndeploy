@@ -5,7 +5,7 @@ a tiny, simple application designed to provide automated os installs
 
 best used with ipxe as follows:
 
-- compile your own ipxe binary (make bin/undionly.kpxe EMBED=ndeploy.ipxe),
+- compile your own ipxe binary (`make bin/undionly.kpxe EMBED=ndeploy.ipxe`),
   where ndeploy.ipxe looks something like:
 
 ```
