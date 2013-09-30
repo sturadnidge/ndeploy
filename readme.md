@@ -1,4 +1,4 @@
-ndeploy
+nDeploy
 ======
 
 a tiny, simple Flask-based application designed to provide automated os installs
