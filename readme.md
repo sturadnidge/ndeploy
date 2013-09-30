@@ -22,30 +22,47 @@ echo
 shell
 ```
 
-- everything after ${ndeploy_server} must be as above (the hostname
-  can be whatever you like - co-locating the ndeploy service with 
-  your tftp service isn't a bad idea).
+- everything after ${ndeploy_server} must be as above
 
 - setup your DHCP insfrastructure to serve undionly.kpxe to all pxe boot requests
 
-- keep your os binary serving http infrastructure somewhere else
+- set the boot order on all your servers to pxe boot first
 
-- make sure you create some .ipxe and .ks files in the templates directory before 
+- provision some boot sequences and go go go!
+
+usage guidance
+--------------
+
+- keep your binary serving http infrastructure somewhere else
+
+- make sure you create some .ipxe and .ks files (by hand) in the templates directory before 
   doing anything. The provisioning process requires them and the web UI is populated from them.
 
 - check out the sample files in the templates directory for some pointers
 
-- the web UI only gives you 3 options for a build sequence, but curl works fine. for example
+- check out provision.json in the templates directory for an idea of the data model
+
+- the web UI is just javascript talking to the backend API
+
+- the web UI only gives you 3 options for a build sequence, but you can create as many as you want via curl:
 
 ```
-curl -i -H "Content-Type: application/json" \
--X POST -d \
+curl -i -H "Content-Type: application/json" -X POST -d \
 '{
 "uuid":"b9ae67b8-25e7-4633-b46a-8702c4bf1d34",
 "fqdn":"ndeploy-test.local",
 "os_template":"centos_6.4.ks",
 "boot_sequence":{"1":"firmware_1.ipxe","2":"firmware_2.ipxe","3":"centos_6.4.ipxe","4":"local.ipxe",}
 }' \
-http://localhost:5000/provisions/
+http://[ndeploy.fqdn]/provisions/
 ```
 
+- to quickly reprovision something `curl -X POST http://[ndeploy.fqdn]/provisions/[uuid]/reprovision`
+
+
+todo
+----
+
+- build out DNS resolution function
+- build a network information service
+- rewrite in node.js
