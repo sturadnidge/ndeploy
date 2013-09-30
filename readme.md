@@ -63,6 +63,6 @@ http://[ndeploy.fqdn]/provisions/
 todo
 ----
 
-- build out DNS resolution function
-- build a network information service
+- build a network and regional settings information service
+- finish off get_network_details and get_regional_settings
 - ~~node.js~~ gevent rewrite
