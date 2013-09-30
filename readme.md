@@ -65,4 +65,4 @@ todo
 
 - build out DNS resolution function
 - build a network information service
-- rewrite in node.js
+- ~~node.js~~ gevent rewrite
