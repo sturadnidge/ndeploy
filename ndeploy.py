@@ -68,13 +68,36 @@ def provision(host_uuid):
             data = json.loads(f.read())
             return jsonify(data)
 
-@app.route('/provisions/<host_uuid>/<file_name>')
+@app.route('/provisions/<host_uuid>/<file_name>', methods=['GET', 'POST'])
 def get_file(host_uuid, file_name):
     provision_dir = os.path.join('provisions', host_uuid)
     provision_file = os.path.join(provision_dir, 'provision.json')
 
     if not os.path.exists(provision_file):
         abort(404)
+
+    if request.method == 'POST':
+        if file_name == 'reprovision':
+            with open(provision_file) as f:
+                provision = json.loads(f.read())
+
+            provision['current_step'] = 1
+            provision['created'] = int(time.time() * 1000)
+            provision['started'] = ""
+            provision['finished'] = ""
+
+            create_symlink(provision_dir, provision['boot_sequence']['1'], 'boot')
+
+            provision_content = json.dumps(provision, indent=2)
+
+            with open(provision_file, 'w+') as f:
+                f.write(provision_content)
+
+            return 'reprovision successful'
+
+        else:
+            abort(404)
+
     else:
         if file_name == 'boot':
             ''' get current boot file content immediately
