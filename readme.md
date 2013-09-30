@@ -1,7 +1,7 @@
 ndeploy
 ======
 
-a tiny, simple application designed to provide automated os installs
+a tiny, simple Flask-based application designed to provide automated os installs
 
 best used with ipxe as follows:
 
@@ -31,7 +31,20 @@ shell
 - keep your os binary serving http infrastructure somewhere else
 
 - make sure you create some .ipxe and .ks files in the templates directory before 
-  doing anything. The web UI is populated from them.
+  doing anything. The provisioning process requires them and the web UI is populated from them.
 
 - check out the sample files in the templates directory for some pointers
+
+- the web UI only gives you 3 options for a build sequence, but curl works fine. for example
+
+```
+curl -i -H "Content-Type: application/json" \
+-X POST -d \
+'{
+"uuid":"b9ae67b8-25e7-4633-b46a-8702c4bf1d34",
+"fqdn":"ndeploy-test.local",
+"os_template":"centos_6.4.ks",
+"boot_sequence":{"1":"firmware_1.ipxe","2":"firmware_2.ipxe","3":"centos_6.4.ipxe","4":"local.ipxe",}}' \
+http://localhost:5000/provisions/
+```
 
