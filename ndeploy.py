@@ -137,6 +137,7 @@ def get_file(host_uuid, file_name):
                             provision['boot_sequence'][str(current_step)], \
                             'boot')
                         provision['current_step'] = current_step
+
                     else:
                         provision['finished'] = int(time.time() * 1000)
 
@@ -190,6 +191,8 @@ def get_templates():
                 boot_t.append(f)
             elif f.endswith('ks'):
                 os_t.append(f)
+            else:
+                pass
 
     return jsonify(boot = boot_t, os = os_t)
 
@@ -226,9 +229,11 @@ def check_unprovisioned(host_uuid):
     unprovisioned_uuid = os.path.join('unprovisioned', host_uuid)
     
     if os.path.exists(unprovisioned_uuid):
+
         try:
             os.unlink(unprovisioned_uuid)
-        except OSError:
+
+        except IOError:
             raise
 
 def copy_provision_files(provision_dir, os_template, boot_sequence):
@@ -236,21 +241,29 @@ def copy_provision_files(provision_dir, os_template, boot_sequence):
         as a dict. return a 400 if source file not found.
     '''
     os_install_src = os.path.join('templates', os_template)
+    
     if os.path.exists(os_install_src):
+
         try:
             shutil.copy(os_install_src, provision_dir)
+
         except OSError:
             raise
+
     else:
         abort(400)
 
     for k, boot_file in boot_sequence.iteritems():
         boot_src = os.path.join('templates', boot_file)
+
         if os.path.exists(boot_src):
+
             try:
                 shutil.copy(boot_src, provision_dir)
+
             except OSError:
                 raise
+
         else:
             abort(400)
 
@@ -273,8 +286,10 @@ def customise_os_template(host_uuid, fqdn, os_template_file):
 
 def create_dir(dir_name):
     if not os.path.isdir(dir_name):
+
         try: 
             os.makedirs(dir_name)
+    
         except OSError:
             raise
 
@@ -286,13 +301,16 @@ def create_file(target, content):
 
 def create_symlink(dir_name, link_source, link_name):
     if os.path.islink(os.path.join(dir_name, link_name)):
+
         try:
             os.unlink(os.path.join(dir_name, link_name))
+        
         except IOError:
             raise
 
     try:
         os.symlink(link_source, os.path.join(dir_name, link_name))
+    
     except IOError:
         raise
 
