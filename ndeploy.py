@@ -5,7 +5,7 @@ import time
 import json
 import shutil
 
-from flask import Flask, Response, abort, jsonify, request, redirect, render_template
+from flask import Flask, Response, abort, jsonify, request, redirect
 
 app = Flask(__name__, static_url_path='')
 
@@ -30,7 +30,9 @@ def unprovisioned():
 
         a GET request will return a directory listing
     '''
-    results = [ f for f in os.listdir('unprovisioned') if uuid_re.match(f) and os.path.isfile(os.path.join('unprovisioned', f)) ]
+    results = [ f for f in os.listdir('unprovisioned') \
+                if uuid_re.match(f) \
+                and os.path.isfile(os.path.join('unprovisioned', f)) ]
 
     return jsonify(unprovisioned = results)
 
@@ -60,7 +62,9 @@ def provisions():
     else:
         ''' a GET will return a directory listing
         '''
-        results = [ d for d in os.listdir('provisions') if uuid_re.match(d) and os.path.isdir(os.path.join('provisions', d)) ]
+        results = [ d for d in os.listdir('provisions') \
+                    if uuid_re.match(d) \
+                    and os.path.isdir(os.path.join('provisions', d)) ]
         
         return jsonify(provisions = results)
 
@@ -73,7 +77,8 @@ def provision(host_uuid):
     else:
         with open(provision_file) as f:
             data = json.loads(f.read())
-            return jsonify(data)
+
+        return jsonify(data)
 
 @app.route('/provisions/<host_uuid>/<file_name>', methods=['GET', 'POST'])
 def get_file(host_uuid, file_name):
@@ -92,7 +97,8 @@ def get_file(host_uuid, file_name):
                 provision['started'] = ""
                 provision['finished'] = ""
 
-                create_symlink(provision_dir, provision['boot_sequence']['1'], 'boot')
+                create_symlink(provision_dir, provision['boot_sequence']['1'], \
+                    'boot')
 
                 provision_content = json.dumps(provision, indent=2)
 
@@ -127,7 +133,9 @@ def get_file(host_uuid, file_name):
 
                     if int(current_step) < len(provision['boot_sequence']):
                         current_step += 1
-                        create_symlink(provision_dir, provision['boot_sequence'][str(current_step)], 'boot')
+                        create_symlink(provision_dir, \
+                            provision['boot_sequence'][str(current_step)], \
+                            'boot')
                         provision['current_step'] = current_step
                     else:
                         provision['finished'] = int(time.time() * 1000)
@@ -140,7 +148,8 @@ def get_file(host_uuid, file_name):
                 return Response(current_bootfile, mimetype='text/plain')
 
             else:
-                ''' it's not a boot file request so just return requested file as text/plain
+                ''' it's not a boot file request so 
+                    just return requested file as text/plain
                 '''
                 with open(os.path.join(provision_dir, file_name)) as f:
                     data = f.read()
@@ -198,12 +207,15 @@ def create_provision(host_uuid, fqdn, os_file, sequence):
 
     create_dir(provision_dir)
 
-    create_file(provision_file, create_provision_content(host_uuid, fqdn, os_file, sequence, provision_created))
+    create_file(provision_file, \
+                create_provision_content(host_uuid, fqdn, os_file, \
+                                         sequence, provision_created))
 
     with open(provision_file) as f:
         data = json.loads(f.read())
 
-    copy_provision_files(provision_dir, data['os_template'], data['boot_sequence'])
+    copy_provision_files(provision_dir, data['os_template'], \
+                         data['boot_sequence'])
 
     create_symlink(provision_dir, data['os_template'], 'ks.cfg')
 
