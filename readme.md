@@ -75,6 +75,7 @@ todo
 ----
 
 - harden up (more defensive code, real error handling)
+- jinjafy
 - build a network and regional settings information service
 - finish off get_network_details and get_regional_settings
-- ~~node.js~~ gevent rewrite
+- node.js rewrite
