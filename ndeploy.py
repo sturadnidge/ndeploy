@@ -158,8 +158,8 @@ def get_file(host_uuid, file_name):
                     
                 return Response(data, mimetype='text/plain')
     else:
-        ''' there no provision file, so either it's
-            and unknown host or something messing around
+        ''' there's no provision file, so either it's
+            an unknown host or someone messing around
         '''
         if not os.path.exists(provision_dir):
             if 'iPXE' in request.user_agent.string:
@@ -180,9 +180,8 @@ def get_file(host_uuid, file_name):
 
 @app.route('/templates')
 def get_templates():
-    ''' split out ipxe and os templates
-        using a list comprehension here
-        would be taking the piss
+    ''' split out ipxe and os templates. using a list comprehension here
+        would be taking the piss...
     '''
     os_t = []
     boot_t = []
