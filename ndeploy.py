@@ -30,8 +30,8 @@ def unprovisioned():
 
         a GET request will return a directory listing
     '''
-    results = [ f for f in os.listdir('unprovisioned') \
-                if uuid_re.match(f) \
+    results = [ f for f in os.listdir('unprovisioned')
+                if uuid_re.match(f)
                 and os.path.isfile(os.path.join('unprovisioned', f)) ]
 
     return jsonify(unprovisioned = results)
@@ -62,8 +62,8 @@ def provisions():
     else:
         ''' a GET will return a directory listing
         '''
-        results = [ d for d in os.listdir('provisions') \
-                    if uuid_re.match(d) \
+        results = [ d for d in os.listdir('provisions')
+                    if uuid_re.match(d)
                     and os.path.isdir(os.path.join('provisions', d)) ]
         
         return jsonify(provisions = results)
@@ -97,8 +97,9 @@ def get_file(host_uuid, file_name):
                 provision['started'] = ""
                 provision['finished'] = ""
 
-                create_symlink(provision_dir, provision['boot_sequence']['1'], \
-                    'boot')
+                create_symlink(provision_dir,
+                               provision['boot_sequence']['1'],
+                               'boot')
 
                 provision_content = json.dumps(provision, indent=2)
 
@@ -133,8 +134,8 @@ def get_file(host_uuid, file_name):
 
                     if int(current_step) < len(provision['boot_sequence']):
                         current_step += 1
-                        create_symlink(provision_dir, \
-                            provision['boot_sequence'][str(current_step)], \
+                        create_symlink(provision_dir,
+                            provision['boot_sequence'][str(current_step)],
                             'boot')
                         provision['current_step'] = current_step
 
@@ -210,14 +211,14 @@ def create_provision(host_uuid, fqdn, os_file, sequence):
 
     create_dir(provision_dir)
 
-    create_file(provision_file, \
-                create_provision_content(host_uuid, fqdn, os_file, \
-                                         sequence, provision_created))
+    create_file(provision_file,
+                create_provision_content(host_uuid, fqdn, os_file,
+                    sequence, provision_created))
 
     with open(provision_file) as f:
         data = json.loads(f.read())
 
-    copy_provision_files(provision_dir, data['os_template'], \
+    copy_provision_files(provision_dir, data['os_template'],
                          data['boot_sequence'])
 
     create_symlink(provision_dir, data['os_template'], 'ks.cfg')
@@ -247,7 +248,7 @@ def copy_provision_files(provision_dir, os_template, boot_sequence):
         try:
             shutil.copy(os_install_src, provision_dir)
 
-        except OSError:
+        except IOError:
             raise
 
     else:
@@ -261,7 +262,7 @@ def copy_provision_files(provision_dir, os_template, boot_sequence):
             try:
                 shutil.copy(boot_src, provision_dir)
 
-            except OSError:
+            except IOError:
                 raise
 
         else:
