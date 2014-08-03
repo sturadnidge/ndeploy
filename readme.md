@@ -58,6 +58,7 @@ data models
 -----------
 
 - provisions
+(note that all values other than boot sequence are strings)
 ```
 {
   "id": "",
