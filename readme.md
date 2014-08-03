@@ -1,7 +1,7 @@
 nDeploy
 ======
 
-a tiny, simple Flask-based application designed to provide automated os installs
+a tiny, simple Flask-based application designed to provide automated os installs.
 
 best used with ipxe as follows:
 
@@ -22,27 +22,24 @@ echo
 shell
 ```
 
-- everything after ${ndeploy_server} must be as above
+- everything after ${ndeploy_server} must be as above.
 
-- setup your DHCP insfrastructure to serve undionly.kpxe to all pxe boot requests
+- setup your DHCP insfrastructure to serve undionly.kpxe to all pxe boot requests.
 
-- set the boot order on all your servers to pxe boot first
+- set the boot order on all your servers to pxe boot first.
 
 - provision some boot sequences and go go go!
 
 usage guidance
 --------------
 
-- keep your binary serving http infrastructure somewhere else
+- keep your binary serving http infrastructure separate to whatever is serving this.
 
 - make sure you create some .ipxe and .ks files (by hand) in the templates directory before 
   doing anything. The provisioning process requires them and the web UI is populated from them.
+  Check out the sample files in the templates directory for some pointers.
 
-- check out the sample files in the templates directory for some pointers
-
-- check out provision.json in the templates directory for an idea of the data model
-
-- the web UI is just javascript talking to the backend API
+- the web UI is just javascript talking to the backend API.
 
 - the web UI only gives you 3 options for a build sequence, but you can create as many as you want via curl:
 
@@ -55,6 +52,60 @@ curl -i -H "Content-Type: application/json" -X POST -d \
 "boot_sequence":{"1":"firmware_1.ipxe","2":"firmware_2.ipxe","3":"centos_6.4.ipxe","4":"local.ipxe"}
 }' \
 http://[ndeploy.fqdn]/provisions/
+```
+
+data models
+-----------
+
+- provisions
+```
+{
+  "id": "",
+  "boot_sequence" : { },
+  "created": "",
+  "current_step": "",
+  "finished": "",
+  "host": {
+    "name": "",
+    "dns_suffix": "",
+    "uuid": ""
+  },
+  "network": {
+    "gateway": "",
+    "ip": "",
+    "netmask": ""
+  },
+  "os_template": "",
+  "regional_settings": {
+    "dns_servers": "",
+    "ntp_servers": "",
+    "dns_suffix": "",
+    "system": {
+      "keyboard": "",
+      "language": "",
+      "timezone": ""
+    }
+  },
+  "started": ""
+}
+```
+
+- locations
+```
+{ "CIDR":
+  { "gateway": "",
+    "dns_servers": [],
+    "ntp_servers": [],
+    "dns_suffix": "",
+    "system":
+      { "language": "",
+        "keyboard": "",
+        "timezone": ""
+    }
+  },
+  "created": "",
+  "updated": ""
+}
 ```
 
 URLs
@@ -78,4 +129,3 @@ todo
 - jinjafy
 - build a network and regional settings information service
 - finish off get_network_details and get_regional_settings
-- node.js rewrite

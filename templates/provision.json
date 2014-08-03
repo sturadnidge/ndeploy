@@ -6,19 +6,23 @@
   "finished": "",
   "host": {
     "name": "",
-    "suffix": "",
+    "dns_suffix": "",
     "uuid": ""
   },
   "network": {
     "gateway": "",
     "ip": "",
     "netmask": ""
-  },        
+  },
   "os_template": "",
   "regional_settings": {
     "dns_servers": "",
     "ntp_servers": "",
-    "system_locale": ""
+    "system": {
+      "keyboard": "",
+      "language": "",
+      "timezone": ""
+    }
   },
   "started": ""
 }

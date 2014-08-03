@@ -107,10 +107,8 @@ def get_file(host_uuid, file_name):
                     f.write(provision_content)
 
                 return 'reprovision successful'
-
             else:
                 abort(404)
-
         else:
             if file_name == 'boot':
                 ''' get current boot file content immediately
@@ -123,7 +121,6 @@ def get_file(host_uuid, file_name):
                     and point boot symlink at next file in boot_sequence
                 '''
                 if 'iPXE' in request.user_agent.string:
-
                     with open(provision_file) as f:
                         provision = json.loads(f.read())
 
@@ -138,7 +135,6 @@ def get_file(host_uuid, file_name):
                             provision['boot_sequence'][str(current_step)],
                             'boot')
                         provision['current_step'] = current_step
-
                     else:
                         provision['finished'] = int(time.time() * 1000)
 
@@ -229,7 +225,6 @@ def check_unprovisioned(host_uuid):
     unprovisioned_uuid = os.path.join('unprovisioned', host_uuid)
     
     if os.path.exists(unprovisioned_uuid):
-
         try:
             os.unlink(unprovisioned_uuid)
 
@@ -243,13 +238,11 @@ def copy_provision_files(provision_dir, os_template, boot_sequence):
     os_install_src = os.path.join('templates', os_template)
     
     if os.path.exists(os_install_src):
-
         try:
             shutil.copy(os_install_src, provision_dir)
-
+    
         except IOError:
             raise
-
     else:
         abort(400)
 
@@ -257,13 +250,11 @@ def copy_provision_files(provision_dir, os_template, boot_sequence):
         boot_src = os.path.join('templates', boot_file)
 
         if os.path.exists(boot_src):
-
             try:
                 shutil.copy(boot_src, provision_dir)
-
+  
             except IOError:
                 raise
-
         else:
             abort(400)
 
@@ -286,7 +277,6 @@ def customise_os_template(host_uuid, fqdn, os_template_file):
 
 def create_dir(dir_name):
     if not os.path.isdir(dir_name):
-
         try: 
             os.makedirs(dir_name)
     
@@ -301,13 +291,10 @@ def create_file(target, content):
 
 def create_symlink(dir_name, link_source, link_name):
     if os.path.islink(os.path.join(dir_name, link_name)):
-
         try:
             os.unlink(os.path.join(dir_name, link_name))
-        
         except IOError:
             raise
-
     try:
         os.symlink(link_source, os.path.join(dir_name, link_name))
     
