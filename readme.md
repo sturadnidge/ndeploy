@@ -3,6 +3,8 @@ nDeploy
 
 a tiny, simple Flask-based application designed to provide automated os installs.
 
+![screenshot](screenshot.png)
+
 best used with ipxe as follows:
 
 - compile your own ipxe binary (`make bin/undionly.kpxe EMBED=ndeploy.ipxe`),
